@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lastseat-db
+    environment:
+      POSTGRES_DB: lastseat
+      POSTGRES_USER: lastseat
+      POSTGRES_PASSWORD: lastseat
+    ports:
+      - "5434:5432"          # exposed so DBeaver on the host can connect
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lastseat -d lastseat"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    container_name: lastseat-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/lastseat
+      DB_USER: lastseat
+      DB_PASSWORD: lastseat
+      HOLD_SECONDS: 120
+      PAYMENT_DELAY_SECONDS: 15
+      ADMIN_RESET_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  # optional: run the k6 load test with  docker compose --profile loadtest run k6
+  k6:
+    image: grafana/k6:latest
+    profiles: ["loadtest"]
+    depends_on:
+      - app
+    environment:
+      BASE_URL: http://app:8080
+    volumes:
+      - ./loadtest:/scripts
+    command: run /scripts/booking-rush.js
+
+volumes:
+  pgdata:

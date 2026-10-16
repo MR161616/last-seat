@@ -1,0 +1,4 @@
+round 1 seat 1: 200 simultaneous reserves in 2254 ms -> {409: 199, 201: 1} | winners=[544] | latency p50=1565ms p95=2068ms max=2213ms
+round 2 seat 2: 200 simultaneous reserves in 1187 ms -> {409: 199, 201: 1} | winners=[551] | latency p50=624ms p95=962ms max=1146ms
+round 3 seat 3: 200 simultaneous reserves in 1004 ms -> {409: 199, 201: 1} | winners=[597] | latency p50=555ms p95=800ms max=926ms
+db verify: {'seatStatusMismatches': 0, 'doubleBookedSeats': 0, 'consistent': True}
