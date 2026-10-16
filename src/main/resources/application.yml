@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: last-seat-booking
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/lastseat}
+    username: ${DB_USER:lastseat}
+    password: ${DB_PASSWORD:lastseat}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:30}
+      minimum-idle: 5
+      connection-timeout: 10000
+  jpa:
+    hibernate:
+      ddl-auto: none           # schema is owned by schema.sql, never by Hibernate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.batch_size: 50
+        order_inserts: true
+  sql:
+    init:
+      mode: always             # runs schema.sql (idempotent: CREATE ... IF NOT EXISTS)
+  task:
+    scheduling:
+      pool-size: 2
+
+server:
+  port: ${PORT:8080}
+  tomcat:
+    threads:
+      max: ${TOMCAT_MAX_THREADS:200}
+
+app:
+  concert:
+    name: "CC-VIT Promotional Cycle Concert"
+    total-seats: 500
+    sections: ["A", "B", "C", "D", "E"]   # 5 sections x 10 rows x 10 seats = 500
+    rows-per-section: 10
+    seats-per-row: 10
+    base-price: 499.00
+  reservation:
+    hold-seconds: ${HOLD_SECONDS:120}        # temporary reservation lifetime
+    expiry-sweep-ms: ${EXPIRY_SWEEP_MS:2000} # how often expired holds are released
+  payment:
+    delayed-settle-seconds: ${PAYMENT_DELAY_SECONDS:15}  # how long a DELAYED payment stays pending
+    random-success-rate: 0.7
+  queue:
+    enabled: true
+  admin:
+    reset-enabled: ${ADMIN_RESET_ENABLED:true}   # POST /api/admin/reset (for demos & load tests)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    com.lastseat: INFO

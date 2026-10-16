@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Last Seat · Concert Booking</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">🎟</span>
+    <div>
+      <h1>The Last Seat</h1>
+      <p id="concert-name">Concert booking portal</p>
+    </div>
+  </div>
+  <div class="stats" id="stats">
+    <div class="stat"><span class="stat-num" id="st-available">–</span><span class="stat-label">available</span></div>
+    <div class="stat"><span class="stat-num held" id="st-held">–</span><span class="stat-label">on hold</span></div>
+    <div class="stat"><span class="stat-num booked" id="st-booked">–</span><span class="stat-label">booked</span></div>
+    <div class="stat"><span class="stat-num queue" id="st-queue">–</span><span class="stat-label">in queue</span></div>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="panel" id="auth-panel">
+    <h2>Who's booking?</h2>
+    <form id="auth-form" class="row">
+      <input id="auth-name" placeholder="Your name" required autocomplete="name">
+      <input id="auth-email" type="email" placeholder="college e-mail" required autocomplete="email">
+      <button type="submit" class="btn primary">Continue</button>
+    </form>
+    <div id="auth-user" class="hidden">
+      Signed in as <strong id="auth-user-name"></strong> <span class="muted" id="auth-user-email"></span>
+      <button id="auth-logout" class="btn ghost small">switch user</button>
+    </div>
+  </section>
+
+  <section class="panel seatmap-panel">
+    <div class="panel-head">
+      <h2>Pick a seat</h2>
+      <div class="legend">
+        <span><i class="sw available"></i>available</span>
+        <span><i class="sw held"></i>held</span>
+        <span><i class="sw booked"></i>booked</span>
+        <span><i class="sw mine"></i>yours</span>
+      </div>
+    </div>
+    <div class="stage">STAGE</div>
+    <div id="seatmap" class="seatmap"></div>
+    <div id="capacity-banner" class="banner hidden">
+      <strong>Sold out for now.</strong> Join the waiting queue – the next seat that frees up (expired hold, cancellation, failed payment) is handed straight to the first person in line.
+      <button id="queue-join" class="btn primary small">Join waiting queue</button>
+    </div>
+  </section>
+
+
+  <aside class="side">
+    <section class="panel" id="my-panel">
+      <div class="panel-head">
+        <h2>My reservations</h2>
+        <label class="muted small">Payment simulation
+          <select id="pay-mode">
+            <option value="SUCCESS">Success</option>
+            <option value="FAIL">Fail</option>
+            <option value="DELAYED">Delayed (slow gateway)</option>
+            <option value="RANDOM">Random</option>
+          </select>
+        </label>
+      </div>
+      <div id="my-list" class="list"><p class="muted">Nothing yet. Click an available seat.</p></div>
+      <details class="history">
+        <summary>Full booking history</summary>
+        <div id="history-list" class="list"></div>
+      </details>
+    </section>
+
+    <section class="panel" id="queue-panel">
+      <h2>Waiting queue</h2>
+      <div id="queue-status" class="muted">Not in the queue.</div>
+      <div class="row">
+        <button id="queue-join-2" class="btn small">Join queue</button>
+        <button id="queue-leave" class="btn ghost small hidden">Leave queue</button>
+      </div>
+    </section>
+  </aside>
+</main>
+
+<div id="toasts" class="toasts"></div>
+<script src="app.js"></script>
+</body>
+</html>
